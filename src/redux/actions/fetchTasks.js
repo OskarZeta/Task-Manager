@@ -1,5 +1,6 @@
 import { FETCH_TASKS } from '../actionTypes';
 import { startLoading, stopLoading } from './handleLoading';
+import setTotal from './setTotal';
 
 const setTasks = tasks => ({
   type: FETCH_TASKS,
@@ -26,6 +27,7 @@ const fetchTasks = url =>
           tasks.push(decodedTask);
         });
         dispatch(setTasks(tasks));
+        dispatch(setTotal(message.total_task_count));
         dispatch(stopLoading());
       })
       .catch(e => {
