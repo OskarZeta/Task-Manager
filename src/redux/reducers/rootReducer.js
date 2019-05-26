@@ -4,13 +4,19 @@ import loading from './loading';
 import sorting from './sorting';
 import pagination from './pagination';
 import total from './total';
+import login from './login';
+import validation from './validation';
+import formDisplay from './formDisplay';
 
 const rootReducer = combineReducers({
   tasks,
   loading,
   sorting,
   page: pagination,
-  total
+  total,
+  login,
+  validation,
+  formDisplay
 });
 
 export default rootReducer;

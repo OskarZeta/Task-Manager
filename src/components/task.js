@@ -1,55 +1,56 @@
 import React, { Component } from 'react';
 import editTask from '../redux/actions/editTask';
 import { connect } from 'react-redux';
+import { showForm } from '../redux/actions/displayForm';
+import EditTaskForm from './editTaskForm';
 
 class Task extends Component {
-  state = {
-    text: this.props.text,
-    status: this.props.status
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      this.setState({
-        text: this.props.text,
-        status: this.props.status
-      });
-    }
-  }
-  changeHandler(field, value) {
-    this.setState({
-      [field]: value
-    });
-  }
-  submitChanges(id, data) {
-    this.props.editTask(id, data);
-  }
   render() {
     return(
       <article style={{ border: '1px solid black' }}>
-        Task
-        <div>{ this.props.username }</div>
-        <div>{ this.props.id }</div>
-        <div>{ this.props.username }</div>
-        <div>{ this.props.email }</div>
+        <div>
+          <span>Пользователь: </span>
+          <span>{ this.props.username }</span>
+        </div>
+        <div>
+          <span>ID: </span>
+          <span>{ this.props.id }</span>
+        </div>
+        <div>
+          <span>E-mail: </span>
+          <span>{ this.props.email }</span>
+        </div>
         <textarea
           name="text"
-          value={ this.state.text }
-          onChange={e => this.changeHandler(e.target.name, e.target.value)}
+          defaultValue={ this.props.text }
+          readOnly
         />
-        <input
-          type="checkbox"
-          name="status"
-          checked={ Number(this.state.status) }
-          onChange={e => this.changeHandler(e.target.name, e.target.checked ? 10 : 0)}
-        />
-        <button onClick={e => this.submitChanges(this.props.id, this.state)}>edit</button>
+        <div>
+          <span>Выполнено: </span>
+          <span>{ Number(this.props.status) === 10 ? 'да' : 'нет' }</span>
+        </div>
+        <button onClick={() => this.props.showForm({
+          type: 'edit', data: {
+            id: this.props.id,
+            username: this.props.username,
+            email: this.props.email,
+            text: this.props.text,
+            status: this.props.status
+          }
+        })}>edit</button>
       </article>
     );
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    login: state.login
+  }
+}
+
 const mapDispatchToProps = {
-  editTask
+  showForm
 };
 
-export default connect(null, mapDispatchToProps)(Task);
+export default connect(mapStateToProps, mapDispatchToProps)(Task);
