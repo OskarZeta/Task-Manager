@@ -22,21 +22,17 @@ const editTask = (id, data) =>
     for (let key in dataSorted) {
       formData.append(key, dataSorted[key]);
     }
-    //console.log(dataSorted);
     let init = {
       method: 'POST',
       body: formData
     };
     fetch(req, init)
       .then(res => {
-        //console.log(res);
         if (!res.ok) throw new Error(`server error, status = ${res.status}`);
         return res.json();
       })
       .then(({ status, message }) => {
-        //console.log(data);
         if (status === 'error') throw new Error(`error, ${message}`);
-        dispatch(fetchTasks(baseUrl + '?developer=' + devName));
       })
       .catch(e => {
         console.log(e);

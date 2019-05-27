@@ -11,20 +11,26 @@ import Pagination from './pagination';
 import LoginForm from './loginForm';
 import { entriesPerPage } from '../constantValues';
 import { showForm, hideForm } from '../redux/actions/displayForm';
+import { resetForm } from '../redux/actions/validateForm';
 
-let url = `${baseUrl}?developer=${devName}`;
+const url = `${baseUrl}?developer=${devName}`;
 
 class App extends Component {
   componentDidMount() {
     this.props.fetchTasks(url + this._encodeParams());
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.sorting !== this.props.sorting || prevProps.page !== this.props.page) {
+    if (prevProps.sorting !== this.props.sorting) {
       this.props.fetchTasks(url + this._encodeParams());
+    }
+    if (prevProps.validation !== this.props.validation && this.props.validation === true) {
+      this.props.fetchTasks(url + this._encodeParams());
+      this.props.resetForm();
+      this.props.hideForm();
     }
   }
   _encodeParams() {
-    let params = { ...this.props.sorting, page: this.props.page };
+    let params = { ...this.props.sorting };
     let encodedParams = '';
     for (let key in params) {
       encodedParams += `&${key}=${params[key]}`
@@ -32,28 +38,24 @@ class App extends Component {
     return encodedParams;
   }
   render() {
+    const { loading, tasks, total, formDisplay, login, showForm } = this.props;
     return(
-      <>
+      <div className="app">
         <SortingForm />
-        {this.props.loading && <Loading />}
-        {!this.props.loading &&
+        {loading && <Loading />}
+        {!loading &&
           <div>
-            <TasksList tasks={this.props.tasks}/>
-            {this.props.total > entriesPerPage &&
-              <Pagination
-                page={this.props.page}
-                total={this.props.total}
-              />
-            }
-            {this.props.formDisplay.type === 'edit' && <EditTaskForm data={this.props.formDisplay.data}/>}
+            <TasksList tasks={tasks}/>
+            {total > entriesPerPage && <Pagination /> }
+            {formDisplay.type === 'edit' && <EditTaskForm data={formDisplay.data}/>}
           </div>
         }
-        <button onClick={() => this.props.showForm({ type: 'add' })}>Add task</button>
-        {this.props.formDisplay.type === 'add' && <AddTaskForm />}
-        {!this.props.login && <button onClick={() => this.props.showForm({ type: 'login' })}>Log in</button>}
-        {this.props.login && <span>You are loggen in</span>}
-        {this.props.formDisplay.type === 'login' && <LoginForm />}
-      </>
+        <button onClick={() => showForm({ type: 'add' })}>Add task</button>
+        {formDisplay.type === 'add' && <AddTaskForm />}
+        {!login && <button onClick={() => showForm({ type: 'login' })}>Log in</button>}
+        {login && <span>You are loggen in</span>}
+        {formDisplay.type === 'login' && <LoginForm />}
+      </div>
     );
   }
 }
@@ -63,17 +65,18 @@ const mapStateToProps = state => {
     tasks: state.tasks,
     loading: state.loading,
     sorting: state.sorting,
-    page: state.page,
     total: Number(state.total),
     login: state.login,
-    formDisplay: state.formDisplay
+    formDisplay: state.formDisplay,
+    validation: state.validation
   }
 };
 
 const mapDispatchToProps = {
   fetchTasks,
   showForm,
-  hideForm
+  hideForm,
+  resetForm
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

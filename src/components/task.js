@@ -6,38 +6,28 @@ import EditTaskForm from './editTaskForm';
 
 class Task extends Component {
   render() {
+    const { id, username, email, text, status } = this.props;
     return(
       <article style={{ border: '1px solid black' }}>
         <div>
           <span>Пользователь: </span>
-          <span>{ this.props.username }</span>
-        </div>
-        <div>
-          <span>ID: </span>
-          <span>{ this.props.id }</span>
+          <span>{ username }</span>
         </div>
         <div>
           <span>E-mail: </span>
-          <span>{ this.props.email }</span>
+          <span>{ email }</span>
         </div>
-        <textarea
-          name="text"
-          defaultValue={ this.props.text }
-          readOnly
-        />
+        <div>
+          <span>Текст задания: </span>
+          <textarea name="text" defaultValue={ text } readOnly />
+        </div>
         <div>
           <span>Выполнено: </span>
-          <span>{ Number(this.props.status) === 10 ? 'да' : 'нет' }</span>
+          <span>{ Number(status) === 10 ? 'да' : 'нет' }</span>
         </div>
-        <button onClick={() => this.props.showForm({
-          type: 'edit', data: {
-            id: this.props.id,
-            username: this.props.username,
-            email: this.props.email,
-            text: this.props.text,
-            status: this.props.status
-          }
-        })}>edit</button>
+        {this.props.login && <button onClick={() => this.props.showForm({
+          type: 'edit', data: { id, username, email, text, status }
+        })}>Редактировать</button>}
       </article>
     );
   }
