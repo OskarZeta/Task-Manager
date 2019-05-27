@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import addTask from '../redux/actions/addTask';
 import { connect } from 'react-redux';
-import { resetForm } from '../redux/actions/validateForm';
 import { hideForm } from '../redux/actions/displayForm';
 import WarningText from './WarningText';
+import WithForm from './WithForm';
 
 class AddTaskForm extends Component {
-  state = {
-    username: '',
-    email: '',
-    text: ''
-  }
-  changeHandler(field, value) {
-    this.setState({
-      [field]: value
-    });
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      email: '',
+      text: ''
+    };
+    this.changeHandler = props.changeHandler.bind(this);
   }
   submitHandler(data) {
     let formData = new FormData();
@@ -23,22 +22,15 @@ class AddTaskForm extends Component {
     }
     this.props.addTask(formData);
   }
-  componentDidMount() {
-    this.props.resetForm();
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.validation !== this.props.validation && this.props.validation === true) {
-      this.props.hideForm();
-    }
-  }
   render() {
-    const validation = this.props.validation;
+    const { validation, hideForm } = this.props;
+    const { username, email, text } = this.state;
     return(
       <form>
         <label>
           <span>username</span>
           <input
-            type="text" name="username" value={this.state.username}
+            type="text" name="username" value={username}
             onChange={e => this.changeHandler(e.target.name, e.target.value)}
           />
           {typeof validation === 'object' && validation.username &&
@@ -48,7 +40,7 @@ class AddTaskForm extends Component {
         <label>
           <span>email</span>
           <input
-            type="text" name="email" value={this.state.email}
+            type="text" name="email" value={email}
             onChange={e => this.changeHandler(e.target.name, e.target.value)}
           />
           {typeof validation === 'object' && validation.email &&
@@ -58,7 +50,7 @@ class AddTaskForm extends Component {
         <label>
           <span>text</span>
           <input
-            type="text" name="text" value={this.state.text}
+            type="text" name="text" value={text}
             onChange={e => this.changeHandler(e.target.name, e.target.value)}
           />
           {typeof validation === 'object' && validation.text &&
@@ -66,7 +58,7 @@ class AddTaskForm extends Component {
           }
         </label>
         <button type="button" onClick={() => this.submitHandler(this.state)}>send</button>
-        <button type="button" onClick={() => this.props.hideForm()}>close</button>
+        <button type="button" onClick={() => hideForm()}>close</button>
       </form>
     );
   }
@@ -80,8 +72,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   addTask,
-  resetForm,
   hideForm
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddTaskForm);
+export default connect(mapStateToProps, mapDispatchToProps)(WithForm(AddTaskForm));

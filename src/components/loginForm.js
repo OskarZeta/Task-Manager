@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { logIn, logOut } from '../redux/actions/handleLogin';
 import { login, password } from '../constantValues';
-import { resetForm, validateForm, invalidateForm } from '../redux/actions/validateForm';
+import { validateForm, invalidateForm } from '../redux/actions/validateForm';
 import { hideForm } from '../redux/actions/displayForm';
 import WarningText from './WarningText';
+import WithForm from './WithForm';
 
 class LoginForm extends Component {
-  state = {
-    name: '',
-    pass: ''
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      pass: ''
+    };
+    this.changeHandler = props.changeHandler.bind(this);
   }
   submitHandler() {
     if (this.state.name === login && this.state.pass === password) {
@@ -21,21 +26,8 @@ class LoginForm extends Component {
       });
     }
   }
-  changeHandler(field, value) {
-    this.setState({
-      [field] : value
-    });
-  }
-  componentDidMount() {
-    this.props.resetForm();
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.validation !== this.props.validation && this.props.validation === true) {
-      this.props.hideForm();
-    }
-  }
   render() {
-    const validation = this.props.validation;
+    const { validation, hideForm } = this.props;
     return(
       <form>
         <label>
@@ -56,7 +48,7 @@ class LoginForm extends Component {
           <WarningText text={validation.login}/>
         }
         <button type="button" onClick={() => this.submitHandler()}>enter</button>
-        <button type="button" onClick={() => this.props.hideForm()}>close</button>
+        <button type="button" onClick={() => hideForm()}>close</button>
       </form>
     );
   }
@@ -72,10 +64,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   logIn,
   logOut,
-  resetForm,
   validateForm,
   invalidateForm,
   hideForm
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(WithForm(LoginForm));

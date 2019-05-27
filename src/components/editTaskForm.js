@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import editTask from '../redux/actions/editTask';
 import { connect } from 'react-redux';
-import { resetForm, validateForm, invalidateForm } from '../redux/actions/validateForm';
+import { validateForm, invalidateForm } from '../redux/actions/validateForm';
 import { hideForm } from '../redux/actions/displayForm';
 import WarningText from './WarningText';
+import WithForm from './WithForm';
 
 class EditTaskForm extends Component {
-  state = {
-    status: this.props.data.status,
-    text: this.props.data.text
-  }
-  changeHandler(field, value) {
-    this.setState({
-      [field]: value
-    });
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: this.props.data.status,
+      text: this.props.data.text
+    };
+    this.changeHandler = props.changeHandler.bind(this);
   }
   submitHandler(id, data) {
     if (!this.state.text.trim().length) {
@@ -25,17 +25,9 @@ class EditTaskForm extends Component {
       this.props.editTask(id, data);
     }
   }
-  componentDidMount() {
-    this.props.resetForm();
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.validation !== this.props.validation && this.props.validation === true) {
-      this.props.hideForm();
-    }
-  }
   render() {
     const { id, username, email } = this.props.data;
-    const validation = this.props.validation;
+    const { validation, hideForm } = this.props;
     return(
       <form>
         <label>
@@ -69,7 +61,7 @@ class EditTaskForm extends Component {
           />
         </label>
         <button type="button" onClick={() => this.submitHandler(id, this.state)}>send</button>
-        <button type="button" onClick={() => this.props.hideForm()}>close</button>
+        <button type="button" onClick={() => hideForm()}>close</button>
       </form>
     );
   }
@@ -83,10 +75,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   editTask,
-  resetForm,
   validateForm,
   invalidateForm,
   hideForm
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditTaskForm);
+export default connect(mapStateToProps, mapDispatchToProps)(WithForm(EditTaskForm));
