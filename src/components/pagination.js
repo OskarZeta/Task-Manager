@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import setPage from '../redux/actions/setPage';
+import { setSorting } from '../redux/actions/handleSorting';
 import { entriesPerPage } from '../constantValues';
 
 class Pagination extends Component {
   clickHandler(e) {
-    const page = this.props.page;
-    e.target.name === 'prev' ?
-      this.props.setPage(page - 1) :
-      this.props.setPage(page + 1);
+    const { field, direction, page } = this.props;
+    this.props.setSorting({
+      sort_field: field,
+      sort_direction: direction,
+      page: e.target.name === 'prev' ? page - 1 : page + 1
+    });
   }
   render() {
     return(
@@ -27,13 +29,15 @@ class Pagination extends Component {
 
 const mapStateToProps = state => {
   return {
-    page: state.page,
-    //total: Number(state.total)
+    sort_field: state.sorting.sort_field,
+    sort_direction: state.sorting.sort_direction,
+    page: state.sorting.page,
+    total: Number(state.total)
   }
 };
 
 const mapDispatchToProps = {
-  setPage
+  setSorting
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pagination);

@@ -3,3 +3,4 @@ export const devName = 'Vasyakov';
 export const login = 'admin';
 export const password = '123';
 export const entriesPerPage = 3;
+export const defaultPage = 1;

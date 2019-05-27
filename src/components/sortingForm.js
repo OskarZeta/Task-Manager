@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setSortType, setSortDirection } from '../redux/actions/handleSorting';
+import { setSorting } from '../redux/actions/handleSorting';
+import { defaultPage } from '../constantValues';
 
 class SortingForm extends Component {
   state = {
@@ -11,9 +12,11 @@ class SortingForm extends Component {
     this.setState({
       [field]: value
     }, () => {
-      field === 'sort_field' ?
-        this.props.setSortType(value) :
-        this.props.setSortDirection(value);
+      this.props.setSorting({
+        sort_field: this.state.sort_field,
+        sort_direction: this.state.sort_direction,
+        page: defaultPage
+      });
     });
   }
   render() {
@@ -21,14 +24,6 @@ class SortingForm extends Component {
     return(
       <form>
         <div>
-          <label>
-            <span>id</span>
-            <input
-              name="sort_field" type="radio" value="id"
-              checked={sort_field === 'id'}
-              onChange={e => this.changeHandler(e.target.name, e.target.value)}
-            />
-          </label>
           <label>
             <span>username</span>
             <input
@@ -85,8 +80,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  setSortType,
-  setSortDirection
+  setSorting
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SortingForm);
