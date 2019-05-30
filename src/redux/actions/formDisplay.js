@@ -1,7 +1,7 @@
 import { FORM_SHOW } from '../actionTypes';
 import { FORM_HIDE } from '../actionTypes';
 
-export const showForm = form => ({
+export const formShow = form => ({
   type: FORM_SHOW,
   payload: {
     type: form.type,
@@ -9,6 +9,6 @@ export const showForm = form => ({
   }
 });
 
-export const hideForm = form => ({
+export const formHide = form => ({
   type: FORM_HIDE
 });
