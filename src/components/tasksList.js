@@ -1,34 +1,24 @@
-import React, { Component } from 'react';
-import { baseUrl, devName } from '../constantValues';
+import React from 'react';
+import PropTypes from 'prop-types';
+
 import Task from './task';
 
-const url = `${baseUrl}?developer=${devName}`;
+const TasksList = ({ tasks }) =>
+  <div className="container">
+    {tasks.map(task =>
+      <Task
+        key = { task.id }
+        id = { task.id }
+        username = { task.username }
+        email = { task.email }
+        text = { task.text }
+        status = { task.status }
+      />
+    )}
+  </div>
 
-class TasksList extends Component {
-  makeTasks() {
-    const tasks = this.props.tasks;
-    return(
-      <>
-        {tasks.map(task =>
-          <Task
-            key = { task.id }
-            id = { task.id }
-            username = { task.username }
-            email = { task.email }
-            text = { task.text }
-            status = { task.status }
-          />
-        )}
-      </>
-    );
-  }
-  render() {
-    return(
-      <div>
-        {this.makeTasks()}
-      </div>
-    );
-  }
+TasksList.propTypes = {
+  tasks: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default TasksList;

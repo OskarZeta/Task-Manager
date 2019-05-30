@@ -1,8 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const WarningText = ({ text }) =>
-  <span>
+  <div className="text-danger m-1">
     {text}
-  </span>
+  </div>
 
+WarningText.propTypes = {
+  text: PropTypes.string.isRequired
+}
 export default WarningText;

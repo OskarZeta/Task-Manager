@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import setStore from './redux/store';
-import App from './components/app.js';
+import App from './containers/app.js';
+import './css/style.css';
 
 const store = setStore();
 

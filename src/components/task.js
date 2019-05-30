@@ -1,37 +1,35 @@
-import React, { Component } from 'react';
-import editTask from '../redux/actions/editTask';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { showForm } from '../redux/actions/displayForm';
-import EditTaskForm from './editTaskForm';
+import { formShow } from '../redux/actions/formDisplay';
 
-class Task extends Component {
-  render() {
-    const { id, username, email, text, status } = this.props;
-    return(
-      <article style={{ border: '1px solid black' }}>
-        <div>
-          <span>Пользователь: </span>
-          <span>{ username }</span>
-        </div>
-        <div>
-          <span>E-mail: </span>
-          <span>{ email }</span>
-        </div>
-        <div>
-          <span>Текст задания: </span>
-          <textarea name="text" defaultValue={ text } readOnly />
-        </div>
-        <div>
-          <span>Выполнено: </span>
-          <span>{ Number(status) === 10 ? 'да' : 'нет' }</span>
-        </div>
-        {this.props.login && <button onClick={() => this.props.showForm({
-          type: 'edit', data: { id, username, email, text, status }
-        })}>Редактировать</button>}
-      </article>
-    );
-  }
-}
+const Task = ({ id, username, email, text, status, login, formShow }) =>
+  <article className="task">
+    <div>
+      <span className="mr-2">Пользователь: </span>
+      <span>{ username }</span>
+    </div>
+    <div>
+      <span className="mr-2">E-mail: </span>
+      <span>{ email }</span>
+    </div>
+    <div>
+      <div>Задание: </div>
+      <textarea
+        className="task__text" name="text"
+        defaultValue={ text } readOnly
+      />
+    </div>
+    <div>
+      <span className="mr-2">Выполнено: </span>
+      <span>{ Number(status) === 10 ? 'да' : 'нет' }</span>
+    </div>
+    {login && <button onClick={() => formShow({
+      type: 'edit', data: { id, username, email, text, status }
+    })}>Редактировать</button>}
+  </article>
+
+
 
 const mapStateToProps = state => {
   return {
@@ -40,7 +38,17 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  showForm
+  formShow
+};
+
+Task.propTypes = {
+  id: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  formShow: PropTypes.func.isRequired,
+  login: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Task);
