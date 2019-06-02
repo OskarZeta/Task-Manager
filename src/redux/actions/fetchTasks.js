@@ -1,5 +1,6 @@
 import { FETCH_TASKS } from '../actionTypes';
 import { startLoading, stopLoading } from './handleLoading';
+import setError from './handleError';
 import setTotal from './setTotal';
 
 const setTasks = tasks => ({
@@ -13,11 +14,11 @@ const fetchTasks = url =>
     dispatch(startLoading());
     fetch(req)
       .then(res => {
-        if (!res.ok) throw new Error(`server error, status = ${res.status}`);
+        if (!res.ok) throw new Error(`Server error, status = ${res.status}`);
         return res.json();
       })
       .then(({ status, message }) => {
-        if (status === 'error') throw new Error(`error, ${message}`);
+        if (status === 'error') throw new Error(`Error, ${message}`);
         let tasks = [];
         message.tasks.forEach(task => {
           let decodedTask = {};
@@ -32,6 +33,7 @@ const fetchTasks = url =>
       })
       .catch(e => {
         console.log(e.message);
+        dispatch(setError(e.message));
       });
   }
 

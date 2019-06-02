@@ -12,6 +12,7 @@ import Pagination from './pagination';
 import Header from '../components/header';
 import Loading from '../components/loading';
 import TasksList from '../components/tasksList';
+import Error from '../components/error';
 
 import { baseUrl, devName, entriesPerPage } from '../constantValues';
 import serialize from '../utils/serialize';
@@ -28,31 +29,34 @@ class App extends Component {
     }
   }
   render() {
-    const { loading, tasks, total, formDisplay, login, sorting } = this.props;
+    const { error, loading, tasks, total, formDisplay, login, sorting } = this.props;
     return(
       <div className="app">
-        <Header login={login}/>
-        {loading &&
-          <div className="container pt-5">
-            <Loading />
-          </div>
-        }
-        {!loading &&
-          <main>
-            <section>
-              <SortingForm />
-            </section>
-            <section className="app__tasks">
-              <TasksList tasks={tasks}/>
-              {total > entriesPerPage && <Pagination /> }
-            </section>
-            {formDisplay.type === 'add' && <FormAddTask sorting={sorting} />}
-            {formDisplay.type === 'edit' &&
-              <FormEditTask data={formDisplay.data} sorting={sorting} />
-            }
-            {formDisplay.type === 'login' && <FormLogin />}
-          </main>
-        }
+        <Header isError={error.isError} login={login}/>
+        {!error.isError && <>
+          {loading &&
+            <div className="container pt-5">
+              <Loading />
+            </div>
+          }
+          {!loading &&
+            <main>
+              <section>
+                <SortingForm />
+              </section>
+              <section className="app__tasks">
+                <TasksList tasks={tasks}/>
+                {total > entriesPerPage && <Pagination /> }
+              </section>
+              {formDisplay.type === 'add' && <FormAddTask sorting={sorting} />}
+              {formDisplay.type === 'edit' &&
+                <FormEditTask data={formDisplay.data} sorting={sorting} />
+              }
+              {formDisplay.type === 'login' && <FormLogin />}
+            </main>
+          }
+        </>}
+        {error.isError && <Error text={error.text}/>}
       </div>
     );
   }
@@ -65,6 +69,7 @@ const mapStateToProps = state => {
     sorting: state.sorting,
     total: Number(state.total),
     login: state.login,
+    error: state.error,
     formDisplay: state.formDisplay
   }
 };
@@ -81,6 +86,7 @@ App.propTypes = {
   total: PropTypes.number.isRequired,
   formDisplay: PropTypes.object.isRequired,
   login: PropTypes.bool.isRequired,
+  error: PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -4,6 +4,7 @@ import loading from './loading';
 import sorting from './sorting';
 import total from './total';
 import login from './login';
+import error from './error';
 import formErrors from './formErrors';
 import formDisplay from './formDisplay';
 
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   sorting,
   total,
   login,
+  error,
   formErrors,
   formDisplay
 });

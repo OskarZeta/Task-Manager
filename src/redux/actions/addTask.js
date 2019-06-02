@@ -1,6 +1,7 @@
 import fetchTasks from './fetchTasks';
 import { setFormErrors, resetFormErrors } from './handleFormErrors';
 import { formHide } from './formDisplay';
+import setError from './handleError';
 import { baseUrl, devName } from '../../constantValues';
 import serialize from '../../utils/serialize';
 
@@ -14,7 +15,7 @@ const addTask = (task, fetchParams) =>
     };
     fetch(req, init)
       .then(res => {
-        if (!res.ok) throw new Error(`server error, status = ${res.status}`);
+        if (!res.ok) throw new Error(`Server error, status = ${res.status}`);
         return res.json();
       })
       .then(({ status, message }) => {
@@ -28,6 +29,7 @@ const addTask = (task, fetchParams) =>
       })
       .catch(e => {
         console.log(e);
+        dispatch(setError(e.message));
       });
   }
 

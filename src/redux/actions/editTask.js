@@ -1,5 +1,6 @@
 import fetchTasks from './fetchTasks';
 import { formHide } from './formDisplay';
+import setError from './handleError';
 import { baseUrl, devName } from '../../constantValues';
 import processData from '../../utils/processData';
 import serialize from '../../utils/serialize';
@@ -19,17 +20,18 @@ const editTask = (id, data, fetchParams) =>
     };
     fetch(req, init)
       .then(res => {
-        if (!res.ok) throw new Error(`server error, status = ${res.status}`);
+        if (!res.ok) throw new Error(`Server error, status = ${res.status}`);
         return res.json();
       })
       .then(({ status, message }) => {
-        if (status === 'error') throw new Error(`error, ${message}`);
+        if (status === 'error') throw new Error(`Error, ${message}`);
         dispatch(formHide());
         const urlFetch = `${baseUrl}?developer=${devName}` + serialize(fetchParams);
         dispatch(fetchTasks(urlFetch));
       })
       .catch(e => {
         console.log(e);
+        dispatch(setError(e.message));
       });
   }
 
