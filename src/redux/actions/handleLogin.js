@@ -1,10 +1,7 @@
 import { LOG_IN } from '../actionTypes';
-import { LOG_OUT } from '../actionTypes';
 
-export const logIn = () => ({
+const handleLogIn = () => ({
   type: LOG_IN
 });
 
-export const logOut = () => ({
-  type: LOG_OUT
-});
+export default handleLogIn;

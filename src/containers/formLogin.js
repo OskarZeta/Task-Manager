@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { logIn, logOut } from '../redux/actions/handleLogin';
+import handleLogIn from '../redux/actions/handleLogin';
 import { formHide } from '../redux/actions/formDisplay';
 import { setFormErrors, resetFormErrors } from '../redux/actions/handleFormErrors';
 
@@ -23,7 +23,7 @@ class FormLogin extends Component {
   submitHandler() {
     if (this.state.name === login && this.state.pass === password) {
       this.props.formHide();
-      this.props.logIn();
+      this.props.handleLogIn();
     } else {
       this.props.setFormErrors({
         login: 'Неверная пара логин-пароль'
@@ -88,8 +88,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  logIn,
-  logOut,
+  handleLogIn,
   formHide,
   setFormErrors,
   resetFormErrors
@@ -101,7 +100,7 @@ FormLogin.propTypes = {
   resetFormErrors: PropTypes.func.isRequired,
   setFormErrors: PropTypes.func.isRequired,
   changeHandler: PropTypes.func.isRequired,
-  logIn: PropTypes.func.isRequired,
+  handleLogIn: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WithForm(FormLogin));
