@@ -10,6 +10,26 @@ module.exports = {
       test: /\.js$/,
       loader: 'babel-loader',
       exclude: '/node_modules/'
+    }, {
+      test: /\.css$/,
+      use: [
+        {
+          loader: 'style-loader'
+        },
+        {
+          loader: 'css-loader'
+        }
+      ]
+    }, {
+      test: /\.svg$/,
+      use: [
+        {
+          loader: 'babel-loader'
+        },
+        {
+          loader: "react-svg-loader"
+        }
+      ]
     }]
   },
   devServer: {
