@@ -1,8 +1,10 @@
 import fetchTasks from './fetchTasks';
-import { formValidate, formInvalidate } from './formValidate';
+import { setFormErrors, resetFormErrors } from './handleFormErrors';
+import { formHide } from './formDisplay';
 import { baseUrl, devName } from '../../constantValues';
+import serialize from '../../utils/serialize';
 
-const addTask = task =>
+const addTask = (task, fetchParams) =>
   dispatch => {
     const url = `${baseUrl}create?developer=${devName}`;
     let req = new Request(url);
@@ -17,9 +19,11 @@ const addTask = task =>
       })
       .then(({ status, message }) => {
         if (status === 'error') {
-          dispatch(formInvalidate(message));
+          dispatch(setFormErrors(message));
         } else {
-          dispatch(formValidate());
+          dispatch(formHide());
+          const urlFetch = `${baseUrl}?developer=${devName}` + serialize(fetchParams);
+          dispatch(fetchTasks(urlFetch));
         }
       })
       .catch(e => {

@@ -1,23 +1,10 @@
-import md5 from 'js-md5';
 import fetchTasks from './fetchTasks';
+import { formHide } from './formDisplay';
 import { baseUrl, devName } from '../../constantValues';
+import processData from '../../utils/processData';
+import serialize from '../../utils/serialize';
 
-function processData(data) {
-  let dataSorted = {};
-  let params = '';
-  Object.entries(data).sort().forEach(pair => {
-    dataSorted[encodeURIComponent(pair[0])] = encodeURIComponent(pair[1]);
-  });
-  Object.entries(dataSorted).forEach(pair => {
-    params += `${encodeURIComponent(pair[0])}=${encodeURIComponent(pair[1])}&`;
-  });
-  params += encodeURIComponent('token') + '=' + encodeURIComponent('beejee');
-  dataSorted[encodeURIComponent('token')] = encodeURIComponent('beejee');
-  dataSorted['signature'] = md5(params);
-  return dataSorted;
-}
-
-const editTask = (id, data) =>
+const editTask = (id, data, fetchParams) =>
   dispatch => {
     const dataSorted = processData(data);
     let formData = new FormData();
@@ -37,6 +24,9 @@ const editTask = (id, data) =>
       })
       .then(({ status, message }) => {
         if (status === 'error') throw new Error(`error, ${message}`);
+        dispatch(formHide());
+        const urlFetch = `${baseUrl}?developer=${devName}` + serialize(fetchParams);
+        dispatch(fetchTasks(urlFetch));
       })
       .catch(e => {
         console.log(e);
