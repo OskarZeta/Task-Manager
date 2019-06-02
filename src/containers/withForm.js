@@ -9,9 +9,13 @@ const WithForm = FormComponent => {
       });
     }
     clickHandler(e) {
-      if (e.target.classList.contains('form__wrapper')) {
+      if (e.target.closest('form') === null) {
+        e.stopPropagation();
         this.props.formHide();
       }
+    }
+    componentDidMount() {
+      this.props.resetFormErrors();
     }
     render() {
       return(
@@ -22,7 +26,8 @@ const WithForm = FormComponent => {
     }
   }
   WrappedComponent.propTypes = {
-    formHide: PropTypes.func.isRequired
+    formHide: PropTypes.func.isRequired,
+    resetFormErrors: PropTypes.func.isRequired
   }
   return WrappedComponent;
 }

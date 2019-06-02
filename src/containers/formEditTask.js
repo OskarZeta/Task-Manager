@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import editTask from '../redux/actions/editTask';
-import { formValidate, formInvalidate } from '../redux/actions/formValidate';
+import { setFormErrors, resetFormErrors } from '../redux/actions/handleFormErrors';
 import { formHide } from '../redux/actions/formDisplay';
 
 import WithForm from './WithForm';
@@ -20,57 +20,63 @@ class FormEditTask extends Component {
   }
   submitHandler(id, data) {
     if (!this.state.text.trim().length) {
-      this.props.formInvalidate({
+      this.props.setFormErrors({
         text: 'Поле обязательно для заполнения'
       });
     } else {
-      this.props.formValidate();
-      this.props.editTask(id, data);
+      this.props.editTask(id, data, this.props.sorting);
     }
   }
   render() {
-    const { id, username, email } = this.props.data;
-    const { validation, formHide } = this.props;
+    const { data: { id, username, email }, formErrors, formHide } = this.props;
     return(
-      <div className="form__container container">
-        <form className="form">
-          <div className="row">
-            <span className="col-4">Пользователь: </span>
-            <span className="col-8">{ username }</span>
-          </div>
-          <div className="row">
-            <span className="col-4">ID: </span>
-            <span className="col-8">{ id }</span>
-          </div>
-          <div className="row">
-            <span className="col-4">E-mail: </span>
-            <span className="col-8">{ email }</span>
-          </div>
-          <label className="row">
-            <span className="col-4">Текст задания: </span>
-            <div className="col-8">
-              <textarea
-                name="text" value={ this.state.text } className="form-control"
-                onChange={e => this.changeHandler(e.target.name, e.target.value)}
-              />
-              {typeof validation === 'object' && validation.text &&
-                <WarningText text={validation.text}/>
-              }
+      <div className="form__container">
+        <div className="container">
+          <form className="form col-12 col-sm-11 col-md-10">
+            <div className="row">
+              <span className="col-4">Пользователь: </span>
+              <span className="col-8">{ username }</span>
             </div>
-          </label>
-          <label className="row">
-            <span className="col-4">Выполнено: </span>
-            <div className="col-8">
-              <input
-                type="checkbox" name="status" className="form-check-input m-0"
-                checked={ Number(this.state.status) }
-                onChange={e => this.changeHandler(e.target.name, e.target.checked ? 10 : 0)}
-              />
+            <div className="row">
+              <span className="col-4">ID: </span>
+              <span className="col-8">{ id }</span>
             </div>
-          </label>
-          <button type="button" onClick={() => this.submitHandler(id, this.state)}>send</button>
-          <button type="button" onClick={() => formHide()}>close</button>
-        </form>
+            <div className="row">
+              <span className="col-4">E-mail: </span>
+              <span className="col-8">{ email }</span>
+            </div>
+            <label className="row">
+              <span className="col-12 col-sm-4">Текст задания: </span>
+              <div className="col-12 col-sm-8">
+                <textarea
+                  name="text" value={ this.state.text } className="form-control"
+                  onChange={e => this.changeHandler(e.target.name, e.target.value)}
+                />
+                {formErrors.text && <WarningText text={formErrors.text}/>}
+              </div>
+            </label>
+            <label className="row">
+              <span className="col-4">Выполнено: </span>
+              <div className="col-8">
+                <input
+                  type="checkbox" name="status" className="form-check-input m-0"
+                  checked={ !!Number(this.state.status) }
+                  onChange={e => this.changeHandler(e.target.name, e.target.checked ? 10 : 0)}
+                />
+              </div>
+            </label>
+            <div className="d-flex justify-content-between">
+              <button
+                type="button" className="btn btn-outline-success col-4"
+                onClick={() => this.submitHandler(id, this.state)}
+              >send</button>
+              <button
+                type="button" className="btn btn-outline-danger col-4"
+                onClick={() => formHide()}
+              >close</button>
+            </div>
+          </form>
+        </div>
       </div>
     );
   }
@@ -78,26 +84,24 @@ class FormEditTask extends Component {
 
 const mapStateToProps = state => {
   return {
-    validation: state.validation
+    formErrors: state.formErrors
   }
 };
 
 const mapDispatchToProps = {
   editTask,
-  formValidate,
-  formInvalidate,
-  formHide
+  formHide,
+  setFormErrors,
+  resetFormErrors
 };
 
 FormEditTask.propTypes = {
   data: PropTypes.object.isRequired,
-  validation: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.bool
-  ]).isRequired,
+  sorting: PropTypes.object.isRequired,
+  formErrors: PropTypes.object.isRequired,
   changeHandler: PropTypes.func.isRequired,
-  formInvalidate: PropTypes.func.isRequired,
-  formValidate: PropTypes.func.isRequired,
+  setFormErrors: PropTypes.func.isRequired,
+  resetFormErrors: PropTypes.func.isRequired,
   formHide: PropTypes.func.isRequired,
   editTask: PropTypes.func.isRequired,
 };

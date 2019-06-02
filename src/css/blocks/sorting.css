@@ -1,0 +1,18 @@
+.sorting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sorting__form label, .sorting__form input {
+  cursor: pointer;
+  user-select: none;
+}
+.sorting__form label {
+  display: flex;
+  align-items: baseline;
+}
+.sorting__form-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

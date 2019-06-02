@@ -5,7 +5,7 @@ import { formShow } from '../redux/actions/formDisplay';
 
 const Button = ({ formShow, children, type }) =>
   <button
-    className={"button button--" + type}
+    className={'btn btn-outline-' + (type === 'login' ? 'info' : 'success') + ' button button--' + type}
     onClick={() => formShow({ type })}
   >
     {children}

@@ -2,19 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from './button';
-import LoginIcon from '../login.svg';
 
 const Header = ({ login }) =>
   <header className="header">
     <div className="container">
-      <div className="header__content row p-4">
+      <div className="header__content py-4 px-1">
         <h1>Task manager</h1>
         {!login &&
           <Button type="login">
-            <LoginIcon/>
+            <span>🔑</span>
           </Button>
         }
-        {login && <span>You are logged in</span>}
+        {login &&
+          <div className="header__admin">
+            <span className="header__admin-icon">👤</span>
+            <span>Админ</span>
+          </div>
+        }
       </div>
     </div>
   </header>

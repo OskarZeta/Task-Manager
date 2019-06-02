@@ -1,0 +1,17 @@
+.task {
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  padding: 15px;
+}
+.task--completed .task__text {
+  opacity: 0.3;
+}
+.task__text {
+  resize: none;
+  width: 100%;
+  padding: 5px 10px;
+}
+.task textarea {
+  outline: none;
+}

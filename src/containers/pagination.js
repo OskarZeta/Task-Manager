@@ -16,8 +16,8 @@ class Pagination extends Component {
   }
   render() {
     return(
-      <div className="pagination-custom">
-        <div className="row col-12 col-sm-8 py-3 mx-auto d-flex justify-content-center align-items-center">
+      <div className="app__pagination">
+        <div className="app__pagination-container row col-12 col-sm-8 py-3">
           <button
             disabled={this.props.page <= 1}
             name="prev" onClick={e => this.clickHandler(e)}

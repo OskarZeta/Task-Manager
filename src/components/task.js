@@ -4,32 +4,39 @@ import { connect } from 'react-redux';
 import { formShow } from '../redux/actions/formDisplay';
 
 const Task = ({ id, username, email, text, status, login, formShow }) =>
-  <article className="task">
-    <div>
+  <article className={"task" + (status == 10 ? " task--completed" : "")}>
+    <div className="mb-1">
       <span className="mr-2">Пользователь: </span>
       <span>{ username }</span>
     </div>
-    <div>
+    <div className="mb-1">
       <span className="mr-2">E-mail: </span>
       <span>{ email }</span>
     </div>
-    <div>
+    <div className="mb-1">
       <div>Задание: </div>
       <textarea
         className="task__text" name="text"
         defaultValue={ text } readOnly
       />
     </div>
-    <div>
-      <span className="mr-2">Выполнено: </span>
-      <span>{ Number(status) === 10 ? 'да' : 'нет' }</span>
+    <div className="mb-1 d-flex justify-content-between">
+      <div>
+        <span className="mr-2">Выполнено: </span>
+        <span className={status == 10 ? "text-success" : "text-danger"}>
+          { status == 10 ? '✔' : '✘' }
+        </span>
+      </div>
+      {login &&
+        <button
+          className="btn btn-outline-info" onClick={() => formShow({
+            type: 'edit', data: { id, username, email, text, status }
+          })}
+        >Редактировать
+        </button>
+      }
     </div>
-    {login && <button onClick={() => formShow({
-      type: 'edit', data: { id, username, email, text, status }
-    })}>Редактировать</button>}
   </article>
-
-
 
 const mapStateToProps = state => {
   return {

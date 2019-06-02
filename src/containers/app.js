@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import fetchTasks from '../redux/actions/fetchTasks';
-import { formHide } from '../redux/actions/formDisplay';
-import { formResetValidation } from '../redux/actions/formValidate';
 
 import FormAddTask from './formAddTask';
 import FormEditTask from './formEditTask';
@@ -16,53 +14,45 @@ import Loading from '../components/loading';
 import TasksList from '../components/tasksList';
 
 import { baseUrl, devName, entriesPerPage } from '../constantValues';
+import serialize from '../utils/serialize';
 
 const url = `${baseUrl}?developer=${devName}`;
 
 class App extends Component {
   componentDidMount() {
-    this.props.fetchTasks(url + this._encodeParams());
+    this.props.fetchTasks(url + serialize(this.props.sorting));
   }
   componentDidUpdate(prevProps) {
     if (prevProps.sorting !== this.props.sorting) {
-      this.props.fetchTasks(url + this._encodeParams());
+      this.props.fetchTasks(url + serialize(this.props.sorting));
     }
-    if (prevProps.validation !== this.props.validation && this.props.validation === true) {
-      this.props.fetchTasks(url + this._encodeParams());
-      this.props.formHide();
-    }
-    if (prevProps.formDisplay !== this.props.formDisplay) {
-      this.props.formResetValidation();
-    }
-  }
-  _encodeParams() {
-    let params = { ...this.props.sorting };
-    let encodedParams = '';
-    for (let key in params) {
-      encodedParams += `&${key}=${params[key]}`
-    }
-    return encodedParams;
   }
   render() {
-    const { loading, tasks, total, formDisplay, login } = this.props;
+    const { loading, tasks, total, formDisplay, login, sorting } = this.props;
     return(
       <div className="app">
         <Header login={login}/>
-        {loading && <Loading />}
-        {!loading && <main>
-          <div>
-            <div>
+        {loading &&
+          <div className="container pt-5">
+            <Loading />
+          </div>
+        }
+        {!loading &&
+          <main>
+            <section>
               <SortingForm />
-            </div>
-            <div className="tasks">
+            </section>
+            <section className="app__tasks">
               <TasksList tasks={tasks}/>
               {total > entriesPerPage && <Pagination /> }
-              {formDisplay.type === 'edit' && <FormEditTask data={formDisplay.data}/>}
-            </div>
-            {formDisplay.type === 'add' && <FormAddTask />}
+            </section>
+            {formDisplay.type === 'add' && <FormAddTask sorting={sorting} />}
+            {formDisplay.type === 'edit' &&
+              <FormEditTask data={formDisplay.data} sorting={sorting} />
+            }
             {formDisplay.type === 'login' && <FormLogin />}
-          </div>
-        </main>}
+          </main>
+        }
       </div>
     );
   }
@@ -75,26 +65,17 @@ const mapStateToProps = state => {
     sorting: state.sorting,
     total: Number(state.total),
     login: state.login,
-    formDisplay: state.formDisplay,
-    validation: state.validation
+    formDisplay: state.formDisplay
   }
 };
 
 const mapDispatchToProps = {
-  fetchTasks,
-  formHide,
-  formResetValidation
+  fetchTasks
 };
 
 App.propTypes = {
   fetchTasks: PropTypes.func.isRequired,
   sorting: PropTypes.object.isRequired,
-  validation: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.bool
-  ]).isRequired,
-  formHide: PropTypes.func.isRequired,
-  formResetValidation: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.object).isRequired,
   total: PropTypes.number.isRequired,

@@ -25,61 +25,71 @@ class SortingForm extends Component {
     const { sort_field, sort_direction } = this.state;
     return(
       <div className="container">
-        <div className="row p-4 d-flex align-items-center justify-content-between">
+        <div className="sorting py-4 px-1">
           <form className="sorting__form">
-            <div className="d-flex flex-column flex-sm-row my-1 justify-content-between">
+            <div className="sorting__form-row flex-sm-row my-1">
               <div className="mr-3">Поле сортировки: </div>
               <div className="d-flex flex-column flex-sm-row">
-                <label className="d-flex align-items-baseline mr-3">
+                <div className="mr-2 custom-control custom-radio">
                   <input
-                    name="sort_field" type="radio" value="username"
-                    checked={sort_field === 'username'}
+                    name="sort_field" type="radio" value="username" id="username"
+                    className="custom-control-input" checked={sort_field === 'username'}
                     onChange={e => this.changeHandler(e.target.name, e.target.value)}
                   />
-                  <span className="ml-1">пользователь</span>
-                </label>
-                <label className="d-flex align-items-baseline mr-3">
+                  <label className="custom-control-label" htmlFor="username">
+                    <span>пользователь</span>
+                  </label>
+                </div>
+                <div className="mr-2 custom-control custom-radio">
                   <input
-                    name="sort_field" type="radio" value="email"
-                    checked={sort_field === 'email'}
+                    name="sort_field" type="radio" value="email" id="email"
+                    className="custom-control-input" checked={sort_field === 'email'}
                     onChange={e => this.changeHandler(e.target.name, e.target.value)}
                   />
-                  <span className="ml-1">email</span>
-                </label>
-                <label className="d-flex align-items-baseline">
+                  <label className="custom-control-label" htmlFor="email">
+                    <span>email</span>
+                  </label>
+                </div>
+                <div className="custom-control custom-radio">
                   <input
-                    name="sort_field" type="radio" value="status"
-                    checked={sort_field === 'status'}
+                    name="sort_field" type="radio" value="status" id="status"
+                    className="custom-control-input" checked={sort_field === 'status'}
                     onChange={e => this.changeHandler(e.target.name, e.target.value)}
                   />
-                  <span className="ml-1">статус</span>
-                </label>
+                  <label className="custom-control-label" htmlFor="status">
+                    <span>статус</span>
+                  </label>
+                </div>
               </div>
             </div>
-            <div className="d-flex flex-column flex-sm-row my-1 justify-content-between">
+            <div className="sorting__form-row flex-sm-row my-1">
               <div className="mr-3">Направление сортировки: </div>
               <div className="d-flex flex-column flex-sm-row">
-                <label className="d-flex align-items-baseline mr-3">
+                <div className="mr-2 custom-control custom-radio">
                   <input
-                    name="sort_direction" type="radio" value="asc"
-                    checked={sort_direction === 'asc'}
+                    name="sort_direction" type="radio" value="asc" id="asc"
+                    className="custom-control-input" checked={sort_direction === 'asc'}
                     onChange={e => this.changeHandler(e.target.name, e.target.value)}
                   />
-                  <span className="ml-1">возрастание</span>
-                </label>
-                <label className="d-flex align-items-baseline">
+                  <label className="custom-control-label" htmlFor="asc">
+                    <span>возрастание</span>
+                  </label>
+                </div>
+                <div className="custom-control custom-radio">
                   <input
-                    name="sort_direction" type="radio" value="desc"
-                    checked={sort_direction === 'desc'}
+                    name="sort_direction" type="radio" value="desc" id="desc"
+                    className="custom-control-input" checked={sort_direction === 'desc'}
                     onChange={e => this.changeHandler(e.target.name, e.target.value)}
                   />
-                  <span className="ml-1">убывание</span>
-                </label>
+                  <label className="custom-control-label" htmlFor="desc">
+                    <span>убывание</span>
+                  </label>
+                </div>
               </div>
             </div>
           </form>
           <Button type="add">
-            <span className="button--add-text">+</span>
+            <span>+</span>
           </Button>
         </div>
       </div>

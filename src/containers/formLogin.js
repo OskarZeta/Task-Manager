@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logIn, logOut } from '../redux/actions/handleLogin';
-import { formValidate, formInvalidate } from '../redux/actions/formValidate';
 import { formHide } from '../redux/actions/formDisplay';
+import { setFormErrors, resetFormErrors } from '../redux/actions/handleFormErrors';
 
 import WithForm from './WithForm';
 
@@ -22,57 +22,59 @@ class FormLogin extends Component {
   }
   submitHandler() {
     if (this.state.name === login && this.state.pass === password) {
-      this.props.formValidate();
+      this.props.formHide();
       this.props.logIn();
     } else {
-      this.props.formInvalidate({
+      this.props.setFormErrors({
         login: 'Неверная пара логин-пароль'
       });
     }
   }
   render() {
-    const { validation, formHide } = this.props;
+    const { formErrors, formHide } = this.props;
     return(
-      <div className="form__container container">
-        <form className="form">
-          <label className="row">
-            <span className="col-4">Логин: </span>
-            <div className="col-8">
-              <input
-                type="text" name="name" value={this.state.name}
-                onChange={e => this.changeHandler(e.target.name, e.target.value)}
-                className="form-control"
-              />
-            </div>
-          </label>
-          <label className="row">
-            <span className="col-4">Пароль: </span>
-            <div className="col-8">
-              <input
-                type="password" name="pass" value={this.state.pass}
-                onChange={e => this.changeHandler(e.target.name, e.target.value)}
-                className="form-control"
-              />
-            </div>
-          </label>
-          {typeof validation === 'object' && validation.login &&
-            <div className="row mb-2">
-              <div className="col-8 ml-auto">
-                <WarningText text={validation.login}/>
+      <div className="form__container">
+        <div className="container">
+          <form className="form col-12 col-sm-11 col-md-10">
+            <label className="row">
+              <span className="col-12 col-sm-4">Логин: </span>
+              <div className="col-12 col-sm-8">
+                <input
+                  type="text" name="name" value={this.state.name}
+                  onChange={e => this.changeHandler(e.target.name, e.target.value)}
+                  className="form-control"
+                />
               </div>
+            </label>
+            <label className="row">
+              <span className="col-12 col-sm-4">Пароль: </span>
+              <div className="col-12 col-sm-8">
+                <input
+                  type="password" name="pass" value={this.state.pass}
+                  onChange={e => this.changeHandler(e.target.name, e.target.value)}
+                  className="form-control"
+                />
+              </div>
+            </label>
+            {formErrors.login &&
+              <div className="row mb-2">
+                <div className="col-12 col-sm-8 ml-auto">
+                  <WarningText text={formErrors.login}/>
+                </div>
+              </div>
+            }
+            <div className="d-flex justify-content-between">
+              <button
+                type="button" className="btn btn-outline-success col-3"
+                onClick={() => this.submitHandler()}
+              >Войти</button>
+              <button
+                type="button" className="btn btn-outline-danger col-3"
+                onClick={() => formHide()}
+              >Закрыть</button>
             </div>
-          }
-          <div className="d-flex justify-content-between">
-            <button
-              type="button" className="btn btn-outline-success col-3"
-              onClick={() => this.submitHandler()}
-            >Войти</button>
-            <button
-              type="button" className="btn btn-outline-danger col-3"
-              onClick={() => formHide()}
-            >Закрыть</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     );
   }
@@ -81,26 +83,23 @@ class FormLogin extends Component {
 const mapStateToProps = state => {
   return {
     login: state.login,
-    validation: state.validation
+    formErrors: state.formErrors
   }
 };
 
 const mapDispatchToProps = {
   logIn,
   logOut,
-  formValidate,
-  formInvalidate,
-  formHide
+  formHide,
+  setFormErrors,
+  resetFormErrors
 };
 
 FormLogin.propTypes = {
-  validation: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.bool
-  ]).isRequired,
+  formErrors: PropTypes.object.isRequired,
   formHide: PropTypes.func.isRequired,
-  formInvalidate: PropTypes.func.isRequired,
-  formValidate: PropTypes.func.isRequired,
+  resetFormErrors: PropTypes.func.isRequired,
+  setFormErrors: PropTypes.func.isRequired,
   changeHandler: PropTypes.func.isRequired,
   logIn: PropTypes.func.isRequired,
 };

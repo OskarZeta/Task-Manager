@@ -1,0 +1,22 @@
+.app {
+  position: relative
+}
+.app__tasks {
+  background: rgba(155, 169, 180, 0.3);
+  padding-top: 15px;
+}
+.app__pagination {
+  background: white;
+}
+.app__pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .app__tasks{
+    background: linear-gradient(90deg, rgba(155, 169, 180, 0.2) 0%,rgba(155, 169, 180, 0.3) 20%,rgba(155, 169, 180, 0.3) 80%,rgba(155, 169, 180, 0.2) 100%);
+  }
+}
